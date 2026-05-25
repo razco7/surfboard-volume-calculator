@@ -15,14 +15,16 @@ const WAVE_SIZES = [
   { id: "large",  modifier: -2 },
 ];
 const CONSTRUCTION = [
-  { id: "pu",  modifier:    0 },
-  { id: "eps", modifier: -2.5 },
+  { id: "pu",       modifier:    0 },
+  { id: "eps",      modifier: -2.5 },
+  { id: "softtop",  modifier:   -1 },
 ];
 const BOARD_TYPES = [
   { id: "shortboard",    modifier:    0 },
   { id: "perf-groveler", modifier: +1.5 },
   { id: "groveler",      modifier:   +3 },
   { id: "fish",          modifier:   +4 },
+  { id: "funboard",      modifier:   +6 },
   { id: "step-up",       modifier: -1.5 },
 ];
 
@@ -41,7 +43,7 @@ const TR = {
     constructionLabel: "Board Construction",
     breakdownLabel:    "Volume Breakdown",
     recommended:       "Recommended",
-    baseRow:           "Base (weight × surfer factor)",
+    baseRow:           "Base (weight × surfer level)",
     waveRow:           "Wave size",
     constructionRow:   "Construction",
     baseline:          "baseline",
@@ -66,14 +68,16 @@ const TR = {
       large:  { label: "Large",  description: "Overhead+" },
     },
     build: {
-      pu:  { label: "PU / PE",     description: "Traditional polyurethane" },
-      eps: { label: "EPS / Epoxy", description: "Lighter, more buoyant" },
+      pu:      { label: "PU / PE",     description: "Traditional polyurethane" },
+      eps:     { label: "EPS / Epoxy", description: "Lighter, more buoyant" },
+      softtop: { label: "Soft Top",    description: "Foam deck, extra buoyant" },
     },
     boards: {
       shortboard:      { label: "Shortboard",     description: "High-performance, steeper rocker, narrow tail" },
       "perf-groveler": { label: "Perf. Groveler", description: "Groveler outline with more performance rocker" },
       groveler:        { label: "Groveler",        description: "Short, wide, flat rocker for weak/small surf" },
       fish:            { label: "Fish",            description: "Wide, twin-fin, swallow tail, flat rocker" },
+      funboard:        { label: "Funboard",        description: "High-volume, rounded nose, forgiving and versatile" },
       "step-up":       { label: "Step-Up",         description: "Longer, narrower, for powerful overhead surf" },
     },
   },
@@ -88,9 +92,9 @@ const TR = {
     weightLabel:       "משקל",
     waveSizeLabel:     "גודל גל אופייני",
     constructionLabel: "חומר הגלשן",
-    breakdownLabel:    "פירוט נפח",
+    breakdownLabel:    "חישוב הנפח",
     recommended:       "מומלץ",
-    baseRow:           "בסיס (משקל × גורם גולש)",
+    baseRow:           "בסיס (משקל × רמת גלישה)",
     waveRow:           "גודל גל",
     constructionRow:   "חומר",
     baseline:          "בסיס",
@@ -115,14 +119,16 @@ const TR = {
       large:  { label: "גדול",   description: "מעל ראש+" },
     },
     build: {
-      pu:  { label: "PU / PE",      description: "פוליאוריתן מסורתי" },
-      eps: { label: "EPS / אפוקסי", description: "קל וצף יותר" },
+      pu:      { label: "PU / PE",      description: "פוליאוריתן מסורתי" },
+      eps:     { label: "EPS / אפוקסי", description: "קל וצף יותר" },
+      softtop: { label: "סופט",         description: "סיפון קצף, ציפה גבוהה" },
     },
     boards: {
       shortboard:      { label: "שורטבורד",      description: "ביצועים גבוהים, רוקר תלול, זנב צר" },
       "perf-groveler": { label: "גרובלר ביצועי", description: "גרובלר עם רוקר ביצועי" },
       groveler:        { label: "גרובלר",         description: "קצר, רחב, רוקר שטוח לגלים חלשים" },
       fish:            { label: "פיש",            description: "רחב, טווין פין, זנב משוחרר, רוקר שטוח" },
+      funboard:        { label: "פאנבורד",        description: "נפחי, אף עגול, סלחני ורב-תכליתי" },
       "step-up":       { label: "סטפ-אפ",         description: "ארוך וצר יותר, לגלים עוצמתיים" },
     },
   },
