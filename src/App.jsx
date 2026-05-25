@@ -6,8 +6,8 @@ const SURFER_LEVELS = [
   { id: "super-fit-pro", factor: 0.35 },
   { id: "fit-advanced",  factor: 0.37 },
   { id: "intermediate",  factor: 0.40 },
-  { id: "casual",        factor: 0.46 },
-  { id: "novice",        factor: 0.55 },
+  { id: "casual",        factor: 0.44 },
+  { id: "novice",        factor: 0.50 },
 ];
 const FITNESS_LEVELS = [
   { id: "fit",     adjustment: -0.03 },
@@ -15,9 +15,9 @@ const FITNESS_LEVELS = [
   { id: "low",     adjustment: +0.05 },
 ];
 const WAVE_SIZES = [
-  { id: "small",  modifier: +2 },
-  { id: "medium", modifier:  0 },
-  { id: "large",  modifier: -2 },
+  { id: "small",  factor: 1.06 },
+  { id: "medium", factor: 1.00 },
+  { id: "large",  factor: 0.94 },
 ];
 const CONSTRUCTION = [
   { id: "pu",       factor: 1.000 },
@@ -25,12 +25,12 @@ const CONSTRUCTION = [
   { id: "softtop",  factor: 0.970 },
 ];
 const BOARD_TYPES = [
-  { id: "shortboard",    modifier:    0 },
-  { id: "perf-groveler", modifier: +1.5 },
-  { id: "groveler",      modifier:   +3 },
-  { id: "fish",          modifier:   +4 },
-  { id: "funboard",      modifier:   +6 },
-  { id: "step-up",       modifier: -1.5 },
+  { id: "shortboard",    factor: 1.00 },
+  { id: "perf-groveler", factor: 1.05 },
+  { id: "groveler",      factor: 1.10 },
+  { id: "fish",          factor: 1.133 },
+  { id: "funboard",      factor: 1.20 },
+  { id: "step-up",       factor: 0.95 },
 ];
 
 // ─── Translations ─────────────────────────────────────────────────────────────
@@ -410,18 +410,21 @@ export default function ShortboardVolumeCalc() {
   const constructionData = constructions.find(c => c.id === construction);
   const boardData        = boardTypes.find(b    => b.id === boardType);
 
-  const baseVolume      = weight * (skillData.factor + fitnessData.adjustment);
-  const shapeVolume     = baseVolume + waveData.modifier + boardData.modifier;
-  const adjustedVolume  = shapeVolume * constructionData.factor;
-  const constructionEffect = adjustedVolume - shapeVolume;
-  const paddleVol       = (adjustedVolume + 2).toFixed(1);
-  const perfVol         = (adjustedVolume - 2).toFixed(1);
+  const baseVolume         = weight * (skillData.factor + fitnessData.adjustment);
+  const afterBoard         = baseVolume * boardData.factor;
+  const afterWave          = afterBoard * waveData.factor;
+  const adjustedVolume     = afterWave * constructionData.factor;
+  const boardEffect        = afterBoard - baseVolume;
+  const waveEffect         = afterWave - afterBoard;
+  const constructionEffect = adjustedVolume - afterWave;
+  const paddleVol          = (adjustedVolume * 1.06).toFixed(1);
+  const perfVol            = (adjustedVolume * 0.94).toFixed(1);
 
   const breakdownRows = [
-    { label: t.baseRow,                                    value: `${baseVolume.toFixed(1)} L` },
-    { label: `${t.boardTypeLabel} (${boardData.label})`,   value: `${boardData.modifier >= 0 ? "+" : ""}${boardData.modifier} L` },
-    { label: t.waveRow,                                    value: `${waveData.modifier >= 0 ? "+" : ""}${waveData.modifier} L` },
-    { label: t.constructionRow,                            value: constructionData.factor === 1 ? t.baseline : `${constructionEffect >= 0 ? "+" : ""}${constructionEffect.toFixed(1)} L` },
+    { label: t.baseRow,                                   value: `${baseVolume.toFixed(1)} L` },
+    { label: `${t.boardTypeLabel} (${boardData.label})`,  value: boardData.factor === 1 ? t.baseline : `${boardEffect >= 0 ? "+" : ""}${boardEffect.toFixed(1)} L` },
+    { label: t.waveRow,                                   value: waveData.factor === 1 ? t.baseline : `${waveEffect >= 0 ? "+" : ""}${waveEffect.toFixed(1)} L` },
+    { label: t.constructionRow,                           value: constructionData.factor === 1 ? t.baseline : `${constructionEffect >= 0 ? "+" : ""}${constructionEffect.toFixed(1)} L` },
   ];
 
   return (
@@ -571,7 +574,11 @@ export default function ShortboardVolumeCalc() {
         closeLabel={t.close}
         dir={dirVal}
         titleSize={isRTL ? "14px" : "12px"}
-        renderMeta={b => b.modifier === 0 ? t.baseline : b.modifier > 0 ? `+${b.modifier} L` : `${b.modifier} L`}
+        renderMeta={b => {
+          if (b.factor === 1) return t.baseline;
+          const effect = baseVolume * (b.factor - 1);
+          return `${effect >= 0 ? "+" : ""}${effect.toFixed(1)} L`;
+        }}
       />
       <OptionSheet
         open={skillSheetOpen}
