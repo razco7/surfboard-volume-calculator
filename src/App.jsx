@@ -513,7 +513,7 @@ export default function ShortboardVolumeCalc() {
 
           </div>
 
-          <p style={{ fontSize: "12px", color: "#595959", marginTop: "48px", lineHeight: 1.8, borderTop: "1px solid #eee", paddingTop: "24px", whiteSpace: "pre-line" }}>
+          <p style={{ fontSize: "12px", color: "#595959", marginTop: "48px", lineHeight: 1.8, borderTop: "1px solid #eee", paddingTop: "24px", whiteSpace: "pre-line", textAlign: "center" }}>
             {t.footer}
           </p>
 
