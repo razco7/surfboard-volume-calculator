@@ -62,11 +62,11 @@ const TR = {
     creditAnd:         " & ",
     creditRaz:         "Raz Cohen",
     skills: {
-      "super-fit-pro": { label: "Super Fit / Pro",    description: "Competing or high-performance surf" },
-      "fit-advanced":  { label: "Fit & Advanced",     description: "Strong turns, excellent paddle fitness" },
-      intermediate:    { label: "Intermediate",        description: "Catching waves, basic turns" },
-      casual:          { label: "Casual",              description: "Regular surfer, average fitness" },
-      novice:          { label: "Novice",              description: "Learning to paddle and pop up" },
+      "super-fit-pro": { label: "Pro",          description: "Competing or high-performance surf, masters all conditions" },
+      "fit-advanced":  { label: "Advanced",     description: "Strong turns, good wave reading, surfs varied breaks" },
+      intermediate:    { label: "Intermediate", description: "Catching waves, basic turns, building consistency" },
+      casual:          { label: "Casual",       description: "Rides regularly, comfortable on smaller mellower waves" },
+      novice:          { label: "Novice",       description: "Learning to paddle, pop up and find balance" },
     },
     waves: {
       small:  { label: "Small",  description: "Knee – waist" },
@@ -119,11 +119,11 @@ const TR = {
     creditAnd:         " ו-",
     creditRaz:         "רז כהן",
     skills: {
-      "super-fit-pro": { label: "מקצועיים / כושר גבוה", description: "גולש מתחרה, ביצועים גבוהים" },
-      "fit-advanced":  { label: "מתקדמים וכשירים",      description: "פניות חזקות, כושר חתירה מעולה" },
-      intermediate:    { label: "בינוניים",               description: "תפיסת פינה, פניות בסיסיות" },
-      casual:          { label: "מזדמנים",                description: "גולש סדיר, כושר ממוצע" },
-      novice:          { label: "מתחילים",                description: "למידת חתירה ועמידה על הגלשן" },
+      "super-fit-pro": { label: "מקצועי",   description: "גולש מתחרה, גלישה ברמה גבוהה, גולש בכל סוגי התנאים" },
+      "fit-advanced":  { label: "מתקדם",    description: "פניות חזקות, קריאת גלים טובה, גולש בתנאים מגוונים" },
+      intermediate:    { label: "בינוניים", description: "תפיסת פניה, פניות בסיסיות, מפתח עקביות" },
+      casual:          { label: "מזדמנים",  description: "גולש לעתים, מרגיש נוח על גלים קטנים ורגועים" },
+      novice:          { label: "מתחילים",  description: "לומד לחתור, לקום ולשמור על שיווי משקל" },
     },
     waves: {
       small:  { label: "קטן",    description: "ברך – מותן" },
