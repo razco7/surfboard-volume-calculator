@@ -105,7 +105,7 @@ const TR = {
     skills: {
       "super-fit-pro": { label: "מקצועיים / כושר גבוה", description: "גולש מתחרה, ביצועים גבוהים" },
       "fit-advanced":  { label: "מתקדמים וכשירים",      description: "פניות חזקות, כושר חתירה מעולה" },
-      intermediate:    { label: "בינוניים",               description: "תפיסת פינה, פניות בסיביות" },
+      intermediate:    { label: "בינוניים",               description: "תפיסת פינה, פניות בסיסיות" },
       casual:          { label: "מזדמנים",                description: "גולש סדיר, כושר ממוצע" },
       novice:          { label: "מתחילים",                description: "למידת חתירה ועמידה על הגלשן" },
     },
