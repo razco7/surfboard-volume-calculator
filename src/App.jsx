@@ -9,15 +9,20 @@ const SURFER_LEVELS = [
   { id: "casual",        factor: 0.46 },
   { id: "novice",        factor: 0.55 },
 ];
+const FITNESS_LEVELS = [
+  { id: "fit",     adjustment: -0.03 },
+  { id: "average", adjustment:  0.00 },
+  { id: "low",     adjustment: +0.05 },
+];
 const WAVE_SIZES = [
   { id: "small",  modifier: +2 },
   { id: "medium", modifier:  0 },
   { id: "large",  modifier: -2 },
 ];
 const CONSTRUCTION = [
-  { id: "pu",       modifier:    0 },
-  { id: "eps",      modifier: -2.5 },
-  { id: "softtop",  modifier:   -1 },
+  { id: "pu",       factor: 1.000 },
+  { id: "eps",      factor: 0.950 },
+  { id: "softtop",  factor: 0.970 },
 ];
 const BOARD_TYPES = [
   { id: "shortboard",    modifier:    0 },
@@ -47,6 +52,7 @@ const TR = {
     waveRow:           "Wave size",
     constructionRow:   "Construction",
     baseline:          "baseline",
+    fitnessLabel:      "Fitness Level",
     close:             "Close",
     langEn:            "English",
     langHe:            "Hebrew",
@@ -71,6 +77,11 @@ const TR = {
       pu:      { label: "PU / PE",     description: "Traditional polyurethane" },
       eps:     { label: "EPS / Epoxy", description: "Lighter, more buoyant" },
       softtop: { label: "Soft Top",    description: "Foam deck, extra buoyant" },
+    },
+    fitness: {
+      fit:     { label: "Fit",         description: "Working out regularly" },
+      average: { label: "Average",     description: "Moderate activity" },
+      low:     { label: "Not Too Fit", description: "Limited physical activity" },
     },
     boards: {
       shortboard:      { label: "Shortboard",     description: "High-performance, steeper rocker, narrow tail" },
@@ -98,6 +109,7 @@ const TR = {
     waveRow:           "גודל גל",
     constructionRow:   "חומר",
     baseline:          "בסיס",
+    fitnessLabel:      "רמת כושר",
     close:             "סגור",
     langEn:            "אנגלית",
     langHe:            "עברית",
@@ -122,6 +134,11 @@ const TR = {
       pu:      { label: "PU / PE",      description: "פוליאוריתן מסורתי" },
       eps:     { label: "EPS / אפוקסי", description: "קל וצף יותר" },
       softtop: { label: "סופט",         description: "סיפון קצף, ציפה גבוהה" },
+    },
+    fitness: {
+      fit:     { label: "בכושר",        description: "מתאמן באופן קבוע" },
+      average: { label: "ממוצע",        description: "פעילות בינונית" },
+      low:     { label: "לא בכושר",     description: "פעילות גופנית מוגבלת" },
     },
     boards: {
       shortboard:      { label: "שורטבורד",      description: "ביצועים גבוהים, רוקר תלול, זנב צר" },
@@ -368,6 +385,7 @@ function SheetTrigger({ label, description, onClick, expanded }) {
 export default function ShortboardVolumeCalc() {
   const [weight, setWeight]                 = useState(75);
   const [skill, setSkill]                   = useState("intermediate");
+  const [fitness, setFitness]               = useState("average");
   const [waveSize, setWaveSize]             = useState("medium");
   const [construction, setConstruction]     = useState("pu");
   const [boardType, setBoardType]           = useState("shortboard");
@@ -380,26 +398,30 @@ export default function ShortboardVolumeCalc() {
   const dirVal = isRTL ? "rtl" : "ltr";
 
   // Merge numeric data with translated labels
-  const surferLevels  = SURFER_LEVELS.map(s  => ({ ...s, ...t.skills[s.id]  }));
-  const waveSizes     = WAVE_SIZES.map(w     => ({ ...w, ...t.waves[w.id]   }));
-  const constructions = CONSTRUCTION.map(c   => ({ ...c, ...t.build[c.id]   }));
-  const boardTypes    = BOARD_TYPES.map(b    => ({ ...b, ...t.boards[b.id]  }));
+  const surferLevels  = SURFER_LEVELS.map(s  => ({ ...s, ...t.skills[s.id]   }));
+  const fitnessLevels = FITNESS_LEVELS.map(f  => ({ ...f, ...t.fitness[f.id] }));
+  const waveSizes     = WAVE_SIZES.map(w     => ({ ...w, ...t.waves[w.id]    }));
+  const constructions = CONSTRUCTION.map(c   => ({ ...c, ...t.build[c.id]    }));
+  const boardTypes    = BOARD_TYPES.map(b    => ({ ...b, ...t.boards[b.id]   }));
 
-  const skillData        = surferLevels.find(s => s.id === skill);
-  const waveData         = waveSizes.find(w    => w.id === waveSize);
+  const skillData        = surferLevels.find(s  => s.id === skill);
+  const fitnessData      = fitnessLevels.find(f => f.id === fitness);
+  const waveData         = waveSizes.find(w     => w.id === waveSize);
   const constructionData = constructions.find(c => c.id === construction);
-  const boardData        = boardTypes.find(b   => b.id === boardType);
+  const boardData        = boardTypes.find(b    => b.id === boardType);
 
-  const baseVolume     = weight * skillData.factor;
-  const adjustedVolume = baseVolume + waveData.modifier + constructionData.modifier + boardData.modifier;
-  const paddleVol      = (adjustedVolume + 2).toFixed(1);
-  const perfVol        = (adjustedVolume - 2).toFixed(1);
+  const baseVolume      = weight * (skillData.factor + fitnessData.adjustment);
+  const shapeVolume     = baseVolume + waveData.modifier + boardData.modifier;
+  const adjustedVolume  = shapeVolume * constructionData.factor;
+  const constructionEffect = adjustedVolume - shapeVolume;
+  const paddleVol       = (adjustedVolume + 2).toFixed(1);
+  const perfVol         = (adjustedVolume - 2).toFixed(1);
 
   const breakdownRows = [
     { label: t.baseRow,                                    value: `${baseVolume.toFixed(1)} L` },
     { label: `${t.boardTypeLabel} (${boardData.label})`,   value: `${boardData.modifier >= 0 ? "+" : ""}${boardData.modifier} L` },
     { label: t.waveRow,                                    value: `${waveData.modifier >= 0 ? "+" : ""}${waveData.modifier} L` },
-    { label: t.constructionRow,                            value: `${constructionData.modifier >= 0 ? "+" : ""}${constructionData.modifier} L` },
+    { label: t.constructionRow,                            value: constructionData.factor === 1 ? t.baseline : `${constructionEffect >= 0 ? "+" : ""}${constructionEffect.toFixed(1)} L` },
   ];
 
   return (
@@ -483,6 +505,11 @@ export default function ShortboardVolumeCalc() {
             <div>
               <SectionLabel fontSize={isRTL ? "14px" : "12px"}>{t.skillLevelLabel}</SectionLabel>
               <SheetTrigger label={skillData.label} description={skillData.description} onClick={() => setSkillSheetOpen(true)} expanded={skillSheetOpen} />
+            </div>
+
+            <div>
+              <SectionLabel fontSize={isRTL ? "14px" : "12px"}>{t.fitnessLabel}</SectionLabel>
+              <PillSelect options={fitnessLevels} value={fitness} onChange={setFitness} labelSize={isRTL ? "14px" : "12px"} groupLabel={t.fitnessLabel} />
             </div>
 
             <div>
