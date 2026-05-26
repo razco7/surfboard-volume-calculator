@@ -133,7 +133,7 @@ const TR = {
     build: {
       pu:      { label: "PU / PE",      description: "פוליאוריתן מסורתי" },
       eps:     { label: "EPS / אפוקסי", description: "קל וצף יותר" },
-      softtop: { label: "סופט",         description: "סיפון קצף, ציפה גבוהה" },
+      softtop: { label: "סופט",         description: "ליבת קצף, ציפה גבוהה" },
     },
     fitness: {
       fit:     { label: "בכושר",        description: "מתאמן באופן קבוע" },
