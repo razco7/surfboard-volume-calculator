@@ -10,9 +10,9 @@ const SURFER_LEVELS = [
   { id: "novice",        factor: 0.50 },
 ];
 const FITNESS_LEVELS = [
-  { id: "fit",     adjustment: -0.03 },
+  { id: "fit",     adjustment: -0.02 },
   { id: "average", adjustment:  0.00 },
-  { id: "low",     adjustment: +0.05 },
+  { id: "low",     adjustment: +0.03 },
 ];
 const WAVE_SIZES = [
   { id: "small",  factor: 1.06 },
